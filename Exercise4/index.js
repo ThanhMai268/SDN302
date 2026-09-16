@@ -12,6 +12,7 @@ http.createServer(function (request, response) {
         if (request.url == '/') fileUrl = '/index.html';
         else fileUrl = request.url;
         var filePath = path.resolve('./public' + fileUrl);
+        // extname là để lấy phần đuôi mở rộng của file, ví dụ: .html, .css, .js
         const fileExt = path.extname(filePath);
 
         if (fileExt === '.html') {
