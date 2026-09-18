@@ -4,11 +4,33 @@
       "id": 1,
       "title": "My Favorite Vacation",
       "date": "2024-03-03",
-      "text": "We spent seven days in Italy..."
+      "text": "Updated text"
     },
     {
-      "id": 2
+      "id": 2,
+      "title": "Exploring the Mountains",
+      "date": "2024-05-15",
+      "text": "A journey through the mountains can be invigorating..."
     }
   ],
-  "videos": []
+  "videos": [
+    {
+      "id": 1,
+      "title": "NodeJS Express Tutorial",
+      "duration": "15:30",
+      "author": "DevTeam"
+    },
+    {
+      "id": 2,
+      "title": "RESTful API Best Practices",
+      "duration": "10:05",
+      "author": "Backend Node"
+    },
+    {
+      "id": 3,
+      "title": "New Video",
+      "author": "Hiep",
+      "duration": "5:00"
+    }
+  ]
 }
