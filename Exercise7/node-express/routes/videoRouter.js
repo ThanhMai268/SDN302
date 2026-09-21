@@ -1,5 +1,5 @@
 const express = require ('express');
-const articleRouter = express.Router();
+const videoRouter = express.Router();
 const fs = require('fs');
 const path = require ('path');
 
@@ -18,13 +18,13 @@ async function writeData(data) {
     await fs.promises.writeFile(filepath, JSON.stringify(data, null, 2), 'utf8');
 };
 
-articleRouter.route('/')
+videoRouter.route('/')
     .get(async (req, res) => {
         try {
             const data = await readData();
             res.status(200).json({
-                message: "Will send all the articles to you!",
-                articles: data.articles
+                message: "Will send all the videos to you!",
+                videos: data.videos
             });
         } catch (err) {
             res.status(500).send ('Error reading data');
@@ -34,68 +34,68 @@ articleRouter.route('/')
     .post(async (req,res) => {
         try {
             const data = await readData();
-            const newId = data.articles.length > 0 ? data.articles[data.articles.length - 1].id + 1 : 1;
-            const newArticle = {
+            const newId = data.videos.length > 0 ? data.videos[data.videos.length - 1].id + 1 : 1;
+            const newVideo = {
                 id: newId, 
                 title: req.body.title, 
-                date: req.body.date, 
-                text: req.body.text 
+                duration: req.body.duration, 
+                author: req.body.author 
             };
-            data.articles.push(newArticle);
+            data.videos.push(newVideo);
             await writeData(data);
-            res.status(201).json(newArticle);
+            res.status(201).json(newVideo);
         } catch (err) {
             res.status(400).json({ message: err.message});
         }
     })
 
     .put(async (req, res) => {
-        res.status(403).end('PUT operation not supported on /articles')
+        res.status(403).end('PUT operation not supported on /videos')
     })
 
     .delete(async (req, res) => {
     try {
         const data = await readData();
-        data.articles = [];
+        data.videos = [];
         await writeData(data);
-        res.status(200).end('Deleting all articles');
+        res.status(200).end('Deleting all videos');
     } catch (err) {
         res.status(400).json({ message: err.message });
     }
 });
 
-articleRouter.route('/:id') 
+videoRouter.route('/:id') 
     .get(async (req, res) => {
         try {
             const data = await readData();
             const Id = Number(req.params.id);
-            const article = data.articles.find(a => a.id === Id);
-            if (!article) {
-                return res.status(404).json({message: `Article ${Id} not found`});
+            const video = data.videos.find(a => a.id === Id);
+            if (!video) {
+                return res.status(404).json({message: `video ${Id} not found`});
             }
-            res.status(200).json(article);
+            res.status(200).json(video);
         } catch (err) {
             res.status(500).json({message: err.message});
         }
     })
 
     .post(async (req, res) => {
-        res.status(403).end('POST operation not supported on /articles/' + + req.params.id);
+        res.status(403).end('POST operation not supported on /videos/' + + req.params.id);
     })
 
     .put (async (req, res) => {
         try {
             const data = await readData();
             const Id = Number (req.params.id);
-            const index = data.articles.findIndex(a => a.id === Id);
+            const index = data.videos.findIndex(a => a.id === Id);
             if (index === -1) {
-                return res.status(404).json({message: `Article ${Id} not found`});
+                return res.status(404).json({message: `video ${Id} not found`});
             }
-            data.articles[index] = {
-                ...data.articles[index],
+            data.videos[index] = {
+                ...data.videos[index],
                 title: req.body.title,
-                date: req.body.date,
-                text: req.body.text
+                duration: req.body.duration,
+                author: req.body.author
             }
             await writeData(data);
         } catch (err) {
@@ -107,17 +107,17 @@ articleRouter.route('/:id')
         try {
             const data = await readData();
             const Id = Number (req.params.id);
-            const index = data.articles.findIndex(a => a.id === Id);
+            const index = data.videos.findIndex(a => a.id === Id);
             if (index === -1) {
-                return res.status(404).json({message: `Article ${Id} not found`});
+                return res.status(404).json({message: `video ${Id} not found`});
             }
             // ở vị trí index xóa 1 phần tử
-            data.articles.splice(index, 1); 
+            data.videos.splice(index, 1); 
             writeData(data); 
-            res.status(200).end('Deleting article: ' + req.params.id);
+            res.status(200).end('Deleting video: ' + req.params.id);
         } catch (err) {
             res.status(500).json({message: err.message});
         }
     })
 
-module.exports = articleRouter;
+module.exports = videoRouter;
